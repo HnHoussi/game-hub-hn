@@ -32,29 +32,36 @@ const useGames = () => {
     // stores any potential error message from the request
     const [error, setError] = useState('');
 
+    const [isLoading, setIsLoading] = useState(false);
+
     // useEffect runs once when the component using this hook mounts
     useEffect(() => {
 
         // Create an AbortController to cancel the request if the component unmounts
         const controller = new AbortController();
 
+        setIsLoading(true);
         // Make GET request to the /games endpoint
         apiClient.get<FetchGamesResponse>('/games', {signal: controller.signal})
             // Store the list of games from the API response
-            .then(res => setGames(res.data.results))
+            .then(res => {
+                setGames(res.data.results);
+                setIsLoading(false);
+            })
             .catch((error) => {
                 // If the request was canceled, do nothing
                 if (error instanceof CanceledError) return;
                 // Otherwise, store the error message
-                setError(error.message)
+                setError(error.message);
+                setIsLoading(false);
             });
 
         // Cleanup: abort the API request if the component unmounts early
         return () => controller.abort();
     }, []); // [] ensures this effect runs only once (on mount)
 
-    // Return the data and error so components can use them
-    return { games, error };
+    // Return the data, error and loading so components can use them
+    return { games, error, isLoading };
 }
 
 export default useGames;
