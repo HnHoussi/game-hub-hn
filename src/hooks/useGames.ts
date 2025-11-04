@@ -1,4 +1,5 @@
 import useData from "@/hooks/useData.ts";
+import type {Genre} from "@/hooks/useGenre.ts";
 
 // Define the shape of a Platform (Platform icons for the games)
 export interface Platform {
@@ -13,9 +14,12 @@ export interface Game {
     name: string;
     background_image: string;
     parent_platforms: { platform: Platform }[];
-    metacritic: number
+    metacritic: number;
 }
 
-const useGames = () => useData<Game>('/games');
+const useGames = (selectedGenre: Genre | null) =>
+    useData<Game>('/games', { params: {genres: selectedGenre?.id} }, [
+        selectedGenre?.id
+    ]);
 
 export default useGames;
