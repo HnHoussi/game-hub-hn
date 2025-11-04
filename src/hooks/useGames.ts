@@ -1,5 +1,5 @@
 import useData from "@/hooks/useData.ts";
-import type {Genre} from "@/hooks/useGenre.ts";
+import type {GameQuery} from "@/App.tsx";
 
 // Define the shape of a Platform (Platform icons for the games)
 export interface Platform {
@@ -17,13 +17,13 @@ export interface Game {
     metacritic: number;
 }
 
-const useGames = (selectedGenre: Genre | null, selectedPlatform: Platform | null) =>
+const useGames = (gameQuery: GameQuery) =>
     useData<Game>('/games', {
         params: {
-            genres: selectedGenre?.id,
-            platforms: selectedPlatform?.id
+            genres: gameQuery.genre?.id,
+            platforms: gameQuery.platform?.id
         } },
-        [selectedGenre?.id, selectedPlatform?.id]
+        [gameQuery]
     );
 
 export default useGames;
