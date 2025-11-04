@@ -15,6 +15,7 @@ export interface Game {
     name: string;
     background_image: string;
     parent_platforms: { platform: Platform }[];
+    metacritic: number
 }
 
 // Define what the API returns when fetching games
